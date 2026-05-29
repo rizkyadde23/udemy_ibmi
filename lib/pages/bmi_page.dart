@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ibmi/widgets/info_card.dart';
@@ -247,7 +249,42 @@ class _bmiPageState extends State<BmiPage> {
           ),
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        if (weight > 0 && height > 0 && age > 0) {
+          double bmi = weight / pow((height / 100), 2);
+          showNotification(bmi);
+        }
+      },
+    );
+  }
+
+  void showNotification(double bmi) {
+    String? status;
+    if (bmi < 18.5) {
+      status = "Underweight";
+    } else if (bmi >= 18.5 && bmi <= 24.9) {
+      status = "Normal";
+    } else if (bmi >= 25 && bmi <= 29.9) {
+      status = "Overweight";
+    } else if (bmi >= 30) {
+      status = "Obese";
+    }
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext _context) {
+        return CupertinoAlertDialog(
+          title: Text(status!),
+          content: Text(bmi.toStringAsFixed(2)),
+          actions: [
+            CupertinoButton(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.pop(_context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
